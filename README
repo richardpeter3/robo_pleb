@@ -1,0 +1,46 @@
+This software does not come with any warranty or guarantee of profitability. It is a leveraged strategy and you should always consider whether this is suitible for your investment needs.
+
+
+THe strategy tries to identify aesthetic trend patterns and buys(sells) on tips(rallies) within these. Aesthetic is the imprtant phrase as the principle behind the strategy is that humans like to risk little and know that people are with them rather than stand alone. All trading strategies need an edge, I have tried to write one that capitalises on the herd mentality of people and also the fact that real traders and portfolio managers will talk about something that is at the "low end of its range" and "in a trend" as justification to adding to a position.
+
+
+Usage:
+There are three main classes:
+
+Portfolio Manager (PM)
+This is the top level class and should be the one that is used to update the model and generate trade reports. The tickers it trades are stored in a pandas DataFrame object with the ticker as the index and the last_update and the earliest_update so that the PM can ensure all trades are up-to date.
+
+The PM holds information like portfolio size, capital, live trades and historic trades. This data can then be pickled and written to a file in python: 
+
+output = open("portfolio_status.pkl", 'wb')
+pickle.dump([pm.ticker_updates, pm.live_trades,  pm.portfolio_size, pm.portfolio_scale], output)
+output.close()
+
+
+Trade Manager
+This is a slave for Portfolio Manager. Each ticker's incomplete trends are stored in a txt file with the name of the ticker. Trade Manager reads the files, updates the trends upto a specified date and re-saves the updated file. It can change trades to "live" (pretend they have been executed where possible) and inform the PM that the trade should be live (for back-testing purposes)
+
+
+Trend
+Trend is a class to describe a setup to a trade. it consists of a 5-tuple of (for an up trend) 
+the low (a) that is below 10 previous lows
+
+the first top (b) that is above a and has not intermediate lows lower than a's low
+
+the second low (c) that is above a's low
+
+a second high (d) that has no lows lower than c's low between it and c.
+
+a final low (e) that is a fraction of the distance from c's low to d's high.
+
+
+
+gpc
+gpc.py is a script for plotting charts and histograms used in analysis of the strategy. It is named after the bloomberg function gpc (graph price candle)
+
+get_data
+this is a script containing funcitons to retrieve data from yahoo as well as a local database (postgres).
+
+
+
+
